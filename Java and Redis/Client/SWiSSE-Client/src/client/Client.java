@@ -389,6 +389,11 @@ public class Client {
 		int next_address = 0;
 		Set<String> document_addresses_set = new HashSet<String>(keyword_to_document_address.values());
 		Random random = new Random();
+
+		List<Integer> available_addresses = new ArrayList<Integer>();
+		for (int addr = 0; addr < array_counter.length; addr++) 
+			if (document_addresses_set.contains(Integer.toString(next_address)) == false)
+				available_addresses.add(addr);
 		
 		Hashtable<String, String> keyword_to_document_address_add = new Hashtable<String, String>();
 		for (String keyword: keyword_to_document_address.keySet())
@@ -396,35 +401,48 @@ public class Client {
 			// Generate one fake address for a real address
 			if (Integer.parseInt(keyword_to_document_address.get(keyword)) < this.array_counter.length)
 			{
-				next_address = random.nextInt(this.array_counter.length);
-				while (document_addresses_set.contains(Integer.toString(next_address)) || array_loc_stash.contains(next_address))
-					next_address = random.nextInt(this.array_counter.length);
-				
-				document_addresses_set.add(Integer.toString(next_address));
-				keyword_to_document_address_add.put("void" + Integer.toString(void_counter), Integer.toString(next_address));
-				void_counter += 1;
+				if (available_addresses.size() > 0) 
+				{
+					next_address = available_addresses.get(random.nextInt(available_addresses.size()));
+					while (document_addresses_set.contains(Integer.toString(next_address)) || array_loc_stash.contains(next_address))
+						next_address = available_addresses.get(random.nextInt(available_addresses.size()));
+					
+					document_addresses_set.add(Integer.toString(next_address));
+					available_addresses.remove(Integer.valueOf(next_address));
+					keyword_to_document_address_add.put("void" + Integer.toString(void_counter), Integer.toString(next_address));
+					void_counter += 1;
+				}
 			}
 			// Generate two fake addresses for a local document
 			else
 			{
-				next_address = random.nextInt(this.array_counter.length);
-				while (document_addresses_set.contains(Integer.toString(next_address)) || array_loc_stash.contains(next_address))
-					next_address = random.nextInt(this.array_counter.length);
+				if (available_addresses.size() > 0) 
+				{
+					next_address = available_addresses.get(random.nextInt(available_addresses.size()));
+					while (document_addresses_set.contains(Integer.toString(next_address)) || array_loc_stash.contains(next_address))
+						next_address = available_addresses.get(random.nextInt(available_addresses.size()));
+					
+					document_addresses_set.add(Integer.toString(next_address));
+					available_addresses.remove(Integer.valueOf(next_address));
+					keyword_to_document_address_add.put("void" + Integer.toString(void_counter), Integer.toString(next_address));
+					void_counter += 1;
+				}
 				
-				document_addresses_set.add(Integer.toString(next_address));
-				keyword_to_document_address_add.put("void" + Integer.toString(void_counter), Integer.toString(next_address));
-				void_counter += 1;
-				
-				next_address = random.nextInt(this.array_counter.length);
-				while (document_addresses_set.contains(Integer.toString(next_address)) || array_loc_stash.contains(next_address))
-					next_address = random.nextInt(this.array_counter.length);
-				
-				document_addresses_set.add(Integer.toString(next_address));
-				keyword_to_document_address_add.put("void" + Integer.toString(void_counter), Integer.toString(next_address));
-				void_counter += 1;
+				if (available_addresses.size() > 0) 
+				{
+					next_address = available_addresses.get(random.nextInt(available_addresses.size()));
+					while (document_addresses_set.contains(Integer.toString(next_address)) || array_loc_stash.contains(next_address))
+						next_address = available_addresses.get(random.nextInt(available_addresses.size()));
+					
+					document_addresses_set.add(Integer.toString(next_address));
+					available_addresses.remove(Integer.valueOf(next_address));
+					keyword_to_document_address_add.put("void" + Integer.toString(void_counter), Integer.toString(next_address));
+					void_counter += 1;
+				}
 			}
 		}
 		keyword_to_document_address.putAll(keyword_to_document_address_add);
+		available_addresses = null;
 		
 		
 		// Compute the addresses and retrieve the documents
