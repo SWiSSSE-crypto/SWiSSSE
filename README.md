@@ -141,10 +141,10 @@ See below for an example:
     Please use the second check as the October payment.  If you have already 
     tossed it, let me know so I can mail you another.
 
-Phillip
+    Phillip
 </details>
 
-3. [Optional] You can replace the keyword extractor with other keyword extractor of your choice as long as the output format is kept the same.
+3. [Optional] You can replace the keyword extractor with another keyword extractor of your choice as long as the output format is kept the same.
 
 
 ## 3.3. Benchmark plaintext search
