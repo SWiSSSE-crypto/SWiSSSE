@@ -16,7 +16,7 @@ def extract_writeback_times(file_name, N_skip):
 
 
 
-writeback_swissse = extract_writeback_times('.\\outputs\\search_400000.txt', 8)
+writeback_swissse = extract_writeback_times('./outputs/search_400000.txt', 8)
 plt.hist(writeback_swissse, weights=np.ones(len(writeback_swissse)) / len(writeback_swissse) * 100, bins = 20)
 
 plt.title('Distribution of Write-back Time', fontsize=16)

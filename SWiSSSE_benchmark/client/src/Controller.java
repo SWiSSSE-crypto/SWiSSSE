@@ -74,6 +74,7 @@ public class Controller {
 		}
 		
 		client.close();
+		System.out.println("The experiment has completed without error.");
 
 		print_performance_log1(keyword_document_pair_count, document_size, client.get_keywords(), timer_setup, timer_query, timer_write_back, stashMonitor, configuration);
 	}
@@ -154,6 +155,8 @@ public class Controller {
 		}
 
 		client.close();
+		
+		System.out.println("The experiment has completed without error.");
 		
 		print_performance_log2(keyword_document_pair_count, document_size, query_sizes, timer_setup, timer_query, timer_write_back, stashMonitor, configuration);
 	}

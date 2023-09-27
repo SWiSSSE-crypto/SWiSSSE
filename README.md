@@ -35,19 +35,19 @@ The repository has the following structure (sorted by file/folder name). We expl
 ## 1.2. Workflow of the experiments
 The repository and the instructions in this README.md are sufficient to reproduce the expeirmental results shown in Section 6.3 and Appendix E.6 of the paper. The high-level workflow of the experiments is as follows:
 1. Download the Enron email corpus. 
-    - The emails should be stored in `.\emails_raw\`.
+    - The emails should be stored in `./emails_raw/`.
 2. Parse the Enron emails.
     - This process will extract keywords from the Enron emails and store the results in another folder.
-    - The raw emails are stored in `.\emails_raw\`. 
-    - The Python script for parsing the emails are in `.\emails_parser\`. 
-    - The emails with extracted keywords will be stored in `.\emails_parsed\`.
+    - The raw emails are stored in `./emails_raw/`. 
+    - The Python script for parsing the emails are in `./emails_parser/`. 
+    - The emails with extracted keywords will be stored in `./emails_parsed/`.
 3. Benchmark plaintext search. 
-    - This is done with a Java implementation of the client in `.\plaintext_benchmark\client` and a Java implementation of the server in `.\plaintext_benchmark\server\`. 
-    - The configuration files used for the experiment are in `.\config_files\`.
+    - This is done with a Java implementation of the client in `./plaintext_benchmark/client` and a Java implementation of the server in `./plaintext_benchmark/server/`. 
+    - The configuration files used for the experiment are in `./config_files/`.
     - The client and the server need to be benchmarked for five times, each time with a different number of emails. The number of emails used in the original experiments are `N_emails = {10000, 50000, 100000, 200000, 400000}`.
 4. Benchmark keyword search and insertion queries in SWiSSSE.
-    - This is done with a Java implementation of the client in `.\SWiSSSE_benchmark\client` and a Java implementation of the server in `.\SWiSSSE_benchmark\server\`.
-    - The configuration files used for the experiment are in `.\config_files\`.
+    - This is done with a Java implementation of the client in `./SWiSSSE_benchmark/client` and a Java implementation of the server in `./SWiSSSE_benchmark/server/`.
+    - The configuration files used for the experiment are in `./config_files/`.
     - For keyword search, the client and the server need to be benchmarked for five times, each time with a different number of emails. The number of emails used in the original experiments are `N_emails = {10000, 50000, 100000, 200000, 400000}`. The same is true for insertion queries.
 
 
@@ -65,7 +65,7 @@ This section gives a rough guideline of the resources required to reproduce the 
 
 \* There are five experiments in total. The time shown here is the total time required.
 
-\*\* The memory costs are for `N_emails = 400000`. The experiments with fewer emails use considerably less memory. If you do not have sufficient memory on your machine, please run the experiments with smaller `N_emails`. You will need to adjust the plot scripts in `.\benchmark_results\` for the final visualization. We discuss optimizations on memory saving in Section 5 of `README.md`.
+\*\* The memory costs are for `N_emails = 400000`. The experiments with fewer emails use considerably less memory. If you do not have sufficient memory on your machine (you are expected to receive a `java.lang.NullPointerException` exception if you do not have enough memory), please run the experiments with smaller `N_emails` (this can be set in the configuration files in `./config_files/`). You will also need to adjust the plot scripts in `./benchmark_results/` for the final visualization. This can be done by changing the input file names (e.g. line 40 or `./benchmark_results/plot_insert.py`) when the Python script uses file names directly, or the values in the arrays (e.g. line 37 of `./benchmark_results/plot_storage.py`) when the Python script uses a list of files. We discuss optimizations on memory saving in Section 5 of `README.md`.
 
 
 ## 1.4. Ethical concerns
@@ -83,9 +83,16 @@ The following softwares are required to run the experiments.
 # 3. Experimental validation of SWiSSSE
 This section describes how to reproduce the experimental results shown in the paper.
 
+
+## 3.0. Set up a virtual environment and install the software requirements
+1. It is recommended to set up a Python virtual environment to avoid any problems related to installing packages in Python. Please follow the following guide to do it: https://realpython.com/python-virtual-environments-a-primer/. Make sure you are using the right commands for your operating system (you can toggle the operating system in the website linked above).
+2. Install softwares/packages listed in Section 2.
+
+
+
 ## 3.1. Download the Enron email corpus
 1. Download the Enron email corpus with the following link: https://www.cs.cmu.edu/~enron/.
-2. Unzip the emails and put them under `.\raw_emails\`. The directory structure should look like this:
+2. Unzip the emails and put them under `./raw_emails/`. The directory structure should look like this:
 ```
 ├── raw_emails
 │   ├── maildir
@@ -101,11 +108,11 @@ pip install nltk
 ```
 (In case pip is not installed, install it by running `sudo apt install python3-pip`.)
 
-2. Navigate to `.\email_parser\`. Run
+2. Navigate to `./email_parser/`. Run
 ```bash
 python Email_parser.py
 ```
-The parsed emails (400K of them) will appear in `.\email_parsed\`. The file name of the emails are replaced with counters for simplicity. Each parsed email has the structure:
+The parsed emails (400K of them) will appear in `./email_parsed/`. The file name of the emails are replaced with counters for simplicity. Each parsed email has the structure:
 ```
 <list of keywords>
 <original text>
@@ -144,88 +151,89 @@ See below for an example:
     Phillip
 </details>
 
-3. [Optional] You can replace the keyword extractor with another keyword extractor of your choice as long as the output format is kept the same.
+3. [Optional] You can replace the keyword extractor with other keyword extractor of your choice as long as the output format is kept the same.
 
 
 ## 3.3. Benchmark plaintext search
-1. Navigate to `.\config_files\`. Start Redis by running
+1. Navigate to `./config_files/`. Start Redis by running
 ```bash
-redis .\redis.conf
+redis-server ./redis.conf
 ```
-2. **Start a new terminal**. Navigate to `.\plaintext_benchmark\`. Compile the server with
+2. **Start a new terminal**. Navigate to `./plaintext_benchmark/`. Compile the server with
 ```bash
-javac -d .\server\bin\ --release 8 -classpath ".:.\server\jedis-3.3.0.jar:" .\server\src\Server.java
+javac -d ./server/bin/ --release 8 -classpath ".:./server/jedis-3.3.0.jar:" ./server/src/Server.java
 ```
 The `--release 8` in the commands are used to make the compiled class files to be as compatible with old versions of Java as possible. It is normal to see warnings when compiling the programs. You may remove `--release 8` from the commands if your Java runtime supports higher versions of Java.
 
-The Jedis jar file is provided in `.\plaintext_benchmark\server\`. In case you want to use a different version of Jedis, download it from here: https://mvnrepository.com/artifact/redis.clients/jedis.
+The Jedis jar file is provided in `./plaintext_benchmark/server/`. In case you want to use a different version of Jedis, download it from here: https://mvnrepository.com/artifact/redis.clients/jedis.
 
-3. Navigate to `.\plaintext_benchmark\server\bin\`. Start the server with
+3. Navigate to `./plaintext_benchmark/server/bin/`. Start the server with
 ```bash
-java -cp ".:..\jedis-3.3.0.jar" Server
+java -cp ".:../jedis-3.3.0.jar" Server
 ```
 
-4. **Start a new terminal.** Navigate to `.\plaintext_benchmark\`. Compile the client with
+4. **Start a new terminal.** Navigate to `./plaintext_benchmark/`. Compile the client with
 ```bash
-javac -d .\client\bin\ --release 8 .\client\src\*.java .\client\src\client\*.java .\client\src\parser\*.java
+javac -d ./client/bin/ --release 8 ./client/src/*.java ./client/src/client/*.java ./client/src/parser/*.java
 ```
 
-5. Navigate to `.\plaintext_benchmark\client\bin\`. Start the client with
+5. Navigate to `./plaintext_benchmark/client/bin/`. Start the client with
 ```bash
-java Controller ..\..\..\config_files\plaintext.conf
+java Controller ../../../config_files/plaintext.conf
 ```
 
-6. Once the benchmark finishes, you can find the results in `.\benchmark_results\`.
+6. Once the benchmark finishes, you can find the results in `./benchmark_results/`.
 
 7. Repeat Step 5 for databases of different sizes. In the paper, we used `N_emails = {10000, 50000, 100000, 200000, 400000}`. You need to restart the server before restarting the client.
 
-More information about the plaintext search scheme and the usage details can be found in `.\plaintext_benchmark\README.md`.
+More information about the plaintext search scheme and the usage details can be found in `./plaintext_benchmark/README.md`.
 
 
 ## 3.4. Benchmark SWiSSSE
 To reduce the possibility of human error. Please close all terminals used for the plaintext search benchmark. Start a new terminal.
 
-1. Navigate to `.\config_files\`. Start Redis by running
+1. Navigate to `./config_files/`. Start Redis by running
 ```bash
-redis .\redis.conf
+redis-server ./redis.conf
 ```
 
-2.  **Start a new terminal**. Navigate to `.\SWiSSSE_benchmark\`. Compile the server with
+2.  **Start a new terminal**. Navigate to `./SWiSSSE_benchmark/`. Compile the server with
 ```bash
-javac -d .\server\bin\ --release 8 -classpath ".:.\server\jedis-3.3.0.jar:" .\server\src\Server.java
+javac -d ./server/bin/ --release 8 -classpath ".:./server/jedis-3.3.0.jar:" ./server/src/Server.java
 ```
 
-3. Navigate to `.\SWiSSSE_benchmark\server\bin\`. Start the server with
+3. Navigate to `./SWiSSSE_benchmark/server/bin/`. Start the server with
 ```bash
-java -cp ".:..\jedis-3.3.0.jar" Server
+java -cp ".:../jedis-3.3.0.jar" Server
 ```
 
-4. **Start a new terminal**. Navigate to `.\SWiSSSE_benchmark\`. Compile the client with
+4. **Start a new terminal**. Navigate to `./SWiSSSE_benchmark/`. Compile the client with
 ```bash
-javac -d .\client\bin\ --release 8 .\client\src\*.java .\client\src\client\*.java .\client\src\crypto\*.java .\client\src\parser\*.java
+javac -d ./client/bin/ --release 8 ./client/src/*.java ./client/src/client/*.java ./client/src/crypto/*.java ./client/src/parser/*.java
 ```
 
-5. [Optional] Test run SWiSSSE. Navigate to `.\SWiSSSE_benchmark\client\bin\`. Start the client with
+5. [Optional] Test run SWiSSSE. Navigate to `./SWiSSSE_benchmark/client/bin/`. Start the client with
 ```bash
-java Client ..\..\..\config_files\SWiSSSE_test.conf
+java Controller ../../../config_files/SWiSSSE_test.conf
 ```
+If the test run is completed without error, you are expected to see "The experiment has completed without error." on the last line of the output.
 
 6. To benchmark search query performance of SWiSSSE, start the client with
 ```bash
-java Client ..\..\..\config_files\SWiSSSE_search.conf
+java Controller ../../../config_files/SWiSSSE_search.conf
 ```
 If you made a test run of SWiSSSE (Step 5), you need to restart the server first (following Step 3) before starting the client.
 
 7. To benchmark insertion query performance of SWiSSSE, restart the server following Step 3, and start the client with
 ```bash
-java Client ..\..\..\config_files\SWiSSSE_insert.conf
+java Controller ../../../config_files/SWiSSSE_insert.conf
 ```
 
-8. Repeat Steps 6 and 7 for databases of different sizes. In the paper, we used `N_emails = {10000, 50000, 100000, 200000, 400000}`. You can change the parameter in `.\config_files\SWiSSSE_search.conf` and `.\config_files\SWiSSSE_insert.conf` respectively.
+8. Repeat Steps 6 and 7 for databases of different sizes. In the paper, we used `N_emails = {10000, 50000, 100000, 200000, 400000}`. You can change the parameter in `./config_files/SWiSSSE_search.conf` and `./config_files/SWiSSSE_insert.conf` respectively.
 You need to restart the server before restarting the client.
 
 ## 3.5. Plot the results
-1. Navigate to `.\benchmark_results\`.
+1. Navigate to `./benchmark_results/`.
 2. There are six benchmark metrics, each correspond to a Python script:
     - Setup time: run `python plot_setup.py`.
     - Search time (static SWiSSSE): run `python plot_search.py`.
@@ -236,12 +244,12 @@ You need to restart the server before restarting the client.
 
 
 # 4. Major claims (Section 6 and Appendix E.6 of the paper)
-1. **Setup time:** The setup time of SWiSSSE is two orders of magnitude slower than a plaintext database system.
-2. **Query response time (search):** The query response time of SWiSSSE for search queries is about two to four times slower than a plaintext database system.
-3. **Query response time (insertion):** The query response time of SWiSSSE for insertion queries is about the same as that for search queries.
-4. **Write-back time:** The write-back time of SWiSSSE is typically under a second.
-5. **Storage cost:** The storage cost of SWiSSSE is only slightly larger than that of a plaintext database system. The main overhead comes from the storage cost of the encrypted search index.
-6. **Stash size:** The stash size for SWiSSSE is under 10 megabyte most of the times. This is reasonably small for morden devices.
+1. **Setup time (Figure 1(a)):** The setup time of SWiSSSE is up to two orders of magnitude slower than a plaintext database system.
+2. **Query response time (search) (Figure 1(b)):** The query response time of SWiSSSE for search queries is about two to four times slower than a plaintext database system.
+3. **Query response time (insertion) (Figure 6(a)):** The query response time of SWiSSSE for insertion queries is about the same as that for search queries.
+4. **Write-back time (Figure 1(c)):** The write-back time of SWiSSSE is typically under a second.
+5. **Storage cost (Figure 1(d)):** The storage cost of SWiSSSE is only slightly larger than that of a plaintext database system. The main overhead comes from the storage cost of the encrypted search index.
+6. **Stash size (Figure 1(e)):** The stash size for SWiSSSE is under 10 megabyte most of the times. This is reasonably small for morden devices.
 
 
 
@@ -253,3 +261,7 @@ You need to restart the server before restarting the client.
  
 
 
+# 6. Limitations
+This repository does not include the code to reproduce Table 3 (comparison of different document retrieval techniques) of our paper. This is because the code only contains information on well-known schemes in the literature and it does not add any value to the artifact.
+
+In addition, this repository does not include the code to reproduce Figure 2 (Cryptanalysis of SWiSSSE). This is because the cryptanalysis assumes worse leakage than what SWiSSSE actually leaks so it cannot be used as an actual measurement of privacy guarantees.

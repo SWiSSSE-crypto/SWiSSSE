@@ -49,11 +49,11 @@ def smoothing(times, grouping):
 
 
 grouping = 200
-time_plaintext  = extract_plaintext_query_times('.\\outputs\\plaintext_400000.txt', 7, offSet=0)
+time_plaintext  = extract_plaintext_query_times('./outputs/plaintext_400000.txt', 7, offSet=0)
 x_plaintext, y_plaintext = smoothing(time_plaintext, grouping)
 
 
-time_swissse    = extract_swissse_query_times('.\\outputs\\search_400000.txt', 8, offSet=0)
+time_swissse    = extract_swissse_query_times('./outputs/search_400000.txt', 8, offSet=0)
 x_swissse, y_swissse = smoothing(time_swissse, grouping)
 
 
@@ -68,7 +68,7 @@ plt.yscale('log')
 plt.title("Insertion Time", fontsize=16)
 plt.xlabel('Min frequency of the keywords in the document', fontsize=14)
 plt.ylabel('Insertion Time (ms)',fontsize=14)
-#plt.legend(('Plaintext', 'dynamic SWiSSSE'), fontsize=14)
+plt.legend(('Plaintext', 'SWiSSSE'), fontsize=14)
 
 plt.xticks(fontsize=12)
 plt.yticks(fontsize=14)

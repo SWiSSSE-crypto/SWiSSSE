@@ -37,7 +37,7 @@ def smoothing(times, grouping):
 
 grouping = 200
 
-time_swissse    = extract_query_times('.\\outputs\\insert_400000.txt', 7)
+time_swissse    = extract_query_times('./outputs/insert_400000.txt', 7)
 x_swissse, y_swissse = smoothing(time_swissse, grouping)
 
 # plot insert time
@@ -49,7 +49,7 @@ plt.yscale('log')
 plt.title("Insertion Time", fontsize=16)
 plt.xlabel('Min frequency of the keyword in the document', fontsize=14)
 plt.ylabel('Insertion Time (ms)',fontsize=14)
-#plt.legend(('Plaintext', 'dynamic SWiSSSE'), fontsize=14)
+#plt.legend(('Plaintext', 'SWiSSSE'), fontsize=14)
 
 plt.xticks(fontsize=12)
 plt.yticks(fontsize=14)

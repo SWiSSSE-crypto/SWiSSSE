@@ -16,7 +16,7 @@ def extract_stash_size(file_name, N_skip):
 
 
 
-stash_size = extract_stash_size('.\\outputs\\search_400000.txt', 8)
+stash_size = extract_stash_size('./outputs/search_400000.txt', 8)
 
 
 plt.hist(stash_size, weights=np.ones(len(stash_size)) / len(stash_size) * 100, bins = 40)

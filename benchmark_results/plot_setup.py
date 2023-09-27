@@ -16,12 +16,12 @@ def extract_setup_time(file_name, N_skip):
 
 data_plaintext = {}
 for N_emails in [10000, 50000, 100000, 200000, 400000]:
-    filename = f'.\\outputs\\plaintext_{N_emails}.txt'
+    filename = f'./outputs/plaintext_{N_emails}.txt'
     data_plaintext[N_emails] = extract_setup_time(filename, 4)
 
 data_swissse = {}
 for N_emails in [10000, 50000, 100000, 200000, 400000]:
-    filename = f'.\\outputs\\search_{N_emails}.txt'
+    filename = f'./outputs/search_{N_emails}.txt'
     data_swissse[N_emails] = extract_setup_time(filename, 4)
 
 

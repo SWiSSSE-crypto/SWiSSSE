@@ -131,15 +131,17 @@ nltk.download('punkt')
 nltk.download('words')
 
 
-file_input = open('.\\include_keywords.txt', 'r')
+file_input = open('./include_keywords.txt', 'r', encoding='windows-1252')
 text = file_input.read()
 file_input.close()
 include_keywords = set(text.split(','))
 
-path_input = '..\\emails_raw\\maildir\\'
-path_output = '..\\emails_parsed\\'
+
+path_input = '../emails_raw/maildir/'
+path_output = '../emails_parsed/'
 
 time_start = time.time()
 parse_emails(path_input, path_output, include_keywords, 400000)
 time_end = time.time()
 print('Time taken: %.2f seconds' % (time_end - time_start))
+
